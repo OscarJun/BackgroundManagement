@@ -11,20 +11,17 @@ var sequelize = require('../sql/sqlConnect.js')
 
 // 获取链接内容
 router.get('/LinkUrlList',function(req,res){
-	console.log(req.query)
-	routeSql.AbpLink.findAll({where:{FileLinkId:req.query.Id,IsDeleted:false},order:[['ShowSort','ASC']],attributes:['Id','LinkUrl','Desc','ShowSort','FileLinkId']}).then(function(LinkData){
+	// console.log(req.query)
+	routeSql.FileLinkName.findOne({where:{LinkName:req.query.LinkName,IsDeleted:false}}).then(function(FileLinkData){
+		// console.log(FileLinkData)
+		if (FileLinkData) {
+			routeSql.AbpLink.findAll({where:{FileLinkId:FileLinkData.dataValues.Id,IsDeleted:false},order:[['ShowSort','ASC']],attributes:['Id','LinkUrl','Desc','ShowSort','FileLinkId']}).then(function(LinkData){
 				res.send({error:0,result:LinkData});
 			});
-	// routeSql.FileLinkName.findOne({where:{LinkName:req.query.LinkName,IsDeleted:false}}).then(function(FileLinkData){
-	// 	// console.log(FileLinkData)
-	// 	if (FileLinkData) {
-	// 		routeSql.AbpLink.findAll({where:{FileLinkId:FileLinkData.dataValues.Id,IsDeleted:false},order:[['ShowSort','ASC']],attributes:['Id','LinkUrl','Desc','ShowSort','FileLinkId']}).then(function(LinkData){
-	// 			res.send({error:0,result:LinkData});
-	// 		});
-	// 	} else {
-	// 		res.send({error:1,result:{msg:'还没有链接'}})
-	// 	}
-	// });
+		} else {
+			res.send({error:1,result:{msg:'还没有链接'}})
+		}
+	});
 })
 
 router.post('/CreateNewUrl',function(req,res){
