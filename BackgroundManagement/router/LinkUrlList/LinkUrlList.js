@@ -6,7 +6,7 @@ var app = express();
 var routeSql = require('../sql/routeSql.js');
 var Sequelize = require('sequelize');
 var sequelize = require('../sql/sqlConnect.js')
-
+var Ipconfig = require('../Ipconfig/Ipconfig.js')
 
 
 // 获取链接内容

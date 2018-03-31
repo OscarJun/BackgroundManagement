@@ -12,6 +12,8 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "mssql": "^4.1.0",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.3",
     "request": "^2.85.0",
     "sequelize": "^4.37.4"
   }
