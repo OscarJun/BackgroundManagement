@@ -1,6 +1,6 @@
 
 var Sequelize = require('sequelize');
-var sequelize = require('../sqlConnect.js')
+var sequelize = require('../sqlConnect.js');
 
 var FileLinkName = sequelize.define('FileLinkName',
 {

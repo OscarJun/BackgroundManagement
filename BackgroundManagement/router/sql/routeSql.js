@@ -1,8 +1,8 @@
 
-var routeSql = {},
-AbpUsers = require('./allSql/AbpUsers.js'),
-AbpLink = require('./allSql/AbpLink.js'),
-FileLinkName = require('./allSql/FileLinkName.js')
+var routeSql = {}
+var AbpUsers = require('./allSql/AbpUsers.js')
+var AbpLink = require('./allSql/AbpLink.js')
+var FileLinkName = require('./allSql/FileLinkName.js')
 
 AbpUsers.sync({force:false});
 AbpLink.sync({force:false});

@@ -4,43 +4,121 @@
 	<meta charset="UTF-8">
 	<title>Document</title>
 </head>
+<link rel="stylesheet" href="./css/dialog.css">
+<link rel="stylesheet" href="./css/EditLink.css">
 <body>
-	<div class="content">
-		<div class="AddTable">
-			<table>
-				<thead>
-					<tr>
-						<th>Url</th>
-						<th>公众号名称</th>
-						<th><button>添加</button></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><input id="Desc" name="Desc" type="text" placeholder="请输入名称"></td>
-						<td><input id="LinkName" name="LinkName" type="text" placeholder="请输入拼音"></td>
-						<td><button onclick="AddLinkFile()">添加</button></td>
-					</tr>
-				</tbody>
-			</table>
+	<div class="sidemenu">
+		<ul>
+			<a href="javascript:history.back(-1)"><li>主页</li></a>
+		</ul>
+	</div>
+	<div class="main_content">
+		<div class="content">
+			<div class="AddTable">
+				<table>
+					<thead>
+						<tr>
+							<th>Url</th>
+							<th>公众号名称</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input id="LinkUrl" name="LinkUrl" type="text" placeholder="请输入链接"></td>
+							<td><input id="Desc" name="Desc" type="text" placeholder="请输入公众号名称"></td>
+							<td><button onclick="AddLinkUrl()">添加</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="ShowTable">
+				<table>
+					<thead>
+						<tr>
+							<th>Url</th>
+							<th>公众号名称</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody Id="ShowTbody">
+					</tbody>
+				</table>
+			</div>
+			<div class="Main">
+				<table>
+					<thead>
+						<tr>
+							<th>Url</th>
+							<th>公众号名称</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody Id="MainTbody">
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </body>
+<script type='text/javascript' src="./jQuery/jquery-3.1.0.js"></script>
+<script type='text/javascript' src="./jQuery/jquery.dialog.js"></script>
 <script>
+	function Ipconfigs(){
+		return Ipconfig = {
+			// Local:{
+			// 	LocalIpHost:'http://47.98.135.197',//外网ip
+			// 	// LocalIpHost:'http://192.168.199.210',//本地测试ip
+			// 	DomainName:'menu.xiaoniu.link',//域名
+			// 	LocalIpPort:8800//运行端口
+			// }
+			Local:{
+				// LocalIpHost:'47.98.135.197',//外网ip
+				LocalIpHost:'http://192.168.199.211',//本地测试ip
+				// DomainName:'menu.xiaoniu.link',//域名
+				LocalIpPort:8800//运行端口
+			}
+		}
+	}
 	function ShowFiles(){
-		var Url = '/LinkUrlList' + window.location.href.substring(window.location.href.lastIndexOf('?Id='))
-		console.log(Url)
-		ajax({
+		var Ipconfig = Ipconfigs().Local
+		var Url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/LinkUrlList' + window.location.href.substring(window.location.href.lastIndexOf('?Id='))
+		$.ajax({
 			type:'GET',
             url:Url,
             dataType:'json',
             data:{},
             beforeSend:function(){},
             success:function(data){
+            	console.log(data)
             	if (data.error) {
             		alert(data.result.msg)
             	} else {
-            		console.log(data)
+	                var UrlArr = [];
+	                data.result.LinkData.map(function(v){
+	                	UrlArr.push({Desc:v.Desc,LinkUrl:v.LinkUrl,Id:v.Id})
+	                })
+	                var ShowTbody = document.getElementById('ShowTbody')
+	                ShowTbody.innerHTML = ''
+	                var MainTbody = document.getElementById('MainTbody')
+	                MainTbody.innerHTML = ''
+	                for (var i = 0; i < UrlArr.length; i++) {
+	                	var tr = document.createElement("tr")
+	                	var StrHtml = "<td><div>"
+	                	StrHtml += UrlArr[i].LinkUrl + "</div></td><td><div><a href='" + UrlArr[i].LinkUrl + "'>"
+	                	StrHtml += UrlArr[i].Desc + "</a></div></td><td><div>"
+	                	StrHtml += "<button class='Edit' onclick='Edit(" + UrlArr[i].Id + ")' >编辑</button><button class='Up' onclick='Up(" + UrlArr[i].Id + ")' >上</button><button class='Down' onclick='Down(" + UrlArr[i].Id + ")' >下</button><button class='Delete' onclick='Delete(" + UrlArr[i].Id + ")' >删除</button></div></td>"
+	                	tr.innerHTML = StrHtml;
+	                	ShowTbody.appendChild(tr)
+
+	                }
+                	var mr = document.createElement("tr")
+                	var StrHtml = "<td><div>"
+                	StrHtml += data.result.BackLinkData.LinkUrl + "</div></td><td><div><a href='" + data.result.BackLinkData.LinkUrl + "'>"
+                	StrHtml += data.result.BackLinkData.Desc + "</a></div></td><td><div>"
+                	StrHtml += "<button class='Edit' onclick='Edit(" + data.result.BackLinkData.Id + ")' >编辑</button></div></td>"
+                	mr.innerHTML = StrHtml;
+                	MainTbody.appendChild(mr)
             	}
             },
             error:function(){
@@ -50,54 +128,209 @@
 	}
 	ShowFiles()
 
-	function ajax(){ 
-	  var ajaxData = { 
-	    type:arguments[0].type || "GET", 
-	    url:arguments[0].url || "", 
-	    async:arguments[0].async || "true", 
-	    data:arguments[0].data || null, 
-	    dataType:arguments[0].dataType || "text", 
-	    contentType:arguments[0].contentType || "application/x-www-form-urlencoded", 
-	    beforeSend:arguments[0].beforeSend || function(){}, 
-	    success:arguments[0].success || function(){}, 
-	    error:arguments[0].error || function(){} 
-	  } 
-	  ajaxData.beforeSend() 
-	  var xhr = createxmlHttpRequest();  
-	  xhr.responseType=ajaxData.dataType; 
-	  xhr.open(ajaxData.type,ajaxData.url,ajaxData.async);  
-	  xhr.setRequestHeader("Content-Type",ajaxData.contentType);  
-	  xhr.send(convertData(ajaxData.data));  
-	  xhr.onreadystatechange = function() {  
-	    if (xhr.readyState == 4) {  
-	      if(xhr.status == 200){ 
-	        ajaxData.success(xhr.response) 
-	      }else{ 
-	        ajaxData.error() 
-	      }  
-	    } 
-	  }  
-	} 
-	  
-	function createxmlHttpRequest() {  
-	  if (window.ActiveXObject) {  
-	    return new ActiveXObject("Microsoft.XMLHTTP");  
-	  } else if (window.XMLHttpRequest) {  
-	    return new XMLHttpRequest();  
-	  }  
-	} 
-	  
-	function convertData(data){ 
-	  if( typeof data === 'object' ){ 
-	    var convertResult = "" ;  
-	    for(var c in data){  
-	      convertResult+= c + "=" + data[c] + "&";  
-	    }  
-	    convertResult=convertResult.substring(0,convertResult.length-1) 
-	    return convertResult; 
-	  }else{ 
-	    return data; 
-	  } 
+	function Edit(Id){
+		var Ipconfig = Ipconfigs().Local
+		var url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/GetLinkUrl?Id=' + Id
+		$.ajax({
+			type:'get',
+			url:url,
+			dataType:'json',
+			success:function(data){
+				if (data.error) {
+					ShowFiles()
+					closeDialog()
+				} else {
+					$("body").append('<div class="mask" style="width:100%; height:100%; position:fixed; top:0; left:0; z-index:999;" onclick="closeDialog()"></div>');
+					$("body").append('<div class="dialog" style="width:600px; height:200px; position:fixed; top:'+getTop(200)+'%; left:'+getLeft(450)+'%; z-index:1000;"></div>')
+					$(".dialog").append('<div class="dialog_body"><div class="dialog_top">编辑</div><div class="dialog_main"><label for="EditUrl">链接：</label><input id="EditUrl" name="EditUrl" type="text" placeholder="请输入链接" value="'+data.result.LinkUrl+'"></br><label for="EditUrl">名称：</label><input id="EditDesc" name="EditDesc" type="text" placeholder="请输入公众号名称" value="'+data.result.Desc+'"></div><div class="dialog_bottom"><span><input type="button" value="确定" onclick="UpdateLink('+data.result.Id+');" />&nbsp;<input type="button" value="取消" onclick="closeDialog();"/></span></div></div>');
+	                document.getElementById('EditUrl').value = data.result.LinkUrl;
+	                document.getElementById('EditDesc').value = data.result.Desc;
+				}
+
+			},
+			error:function(){}
+		})
 	}
+
+	function UpdateLink(Id){
+		var Ipconfig = Ipconfigs().Local
+		var url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/UpdateLinkUrl';
+		var LinkUrl = document.getElementById('EditUrl').value;
+		var Desc = document.getElementById('EditDesc').value;
+		if (LinkUrl==''||Desc=='') {
+			alert('链接跟名称不能为空')
+		} else {
+			$.ajax({
+				type:'post',
+				url:url,
+				dataType:'json',
+				data:{Id:Id,LinkUrl:LinkUrl,Desc:Desc},
+				success:function(data){
+					closeDialog()
+					ShowFiles()
+	                document.getElementById('EditUrl').value = '';
+	                document.getElementById('EditDesc').value = '';
+				}
+			})
+		}
+	}
+
+	function getLeft(width){
+		return 50-50*width/$(document).width();
+	}
+	function getTop(height){
+		return 50-50*height/$(document).height();
+	}
+	function closeDialog(){
+		$('.mask').fadeOut(280);
+		$('.dialog').fadeOut(280);
+	}
+	function Delete(Id){
+		var Ipconfig = Ipconfigs().Local
+		var url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/DeleteLinkUrl?Id=' + Id
+		$.ajax({
+			type:'GET',
+            url:url,
+            dataType:'json',
+            data:{},
+            beforeSend:function(){},
+            success:function(data){
+            	if (data.error) {
+            		alert(data.result.msg)
+            		ShowFiles()
+            	} else {
+            		ShowFiles()
+            	}
+            },
+            error:function(){
+                console.log('error')
+            }
+		})
+	}
+
+	function AddLinkUrl(){
+		var Ipconfig = Ipconfigs().Local
+		var FileLinkId = window.location.href.substring(window.location.href.lastIndexOf('?Id=') + 4)
+		var LinkUrl = document.getElementById('LinkUrl').value;
+		var Desc = document.getElementById('Desc').value;
+		var url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/CreateNewUrl'
+		$.ajax({
+			type:'POST',
+            url:url,
+            dataType:'json',
+            data:{FileLinkId:FileLinkId,LinkUrl:LinkUrl,Desc:Desc},
+            beforeSend:function(){},
+            success:function(data){
+                if (data.error) {
+                	alert(data.result.msg)
+                } else {
+	                ShowFiles()
+                }
+                document.getElementById('LinkUrl').value = '';
+                document.getElementById('Desc').value = '';
+
+            },
+            error:function(){
+                console.log('error')
+            }
+		})
+	}
+
+	function Up(Id){
+		var Ipconfig = Ipconfigs().Local
+		var url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/UpLinkUrl?Id=' + Id
+		$.ajax({
+			type:'GET',
+            url:url,
+            dataType:'json',
+            data:{},
+            beforeSend:function(){},
+            success:function(data){
+            	if (data.error) {
+            		alert(data.result.msg)
+            		ShowFiles()
+            	} else {
+            		ShowFiles()
+            	}
+            },
+            error:function(){
+                console.log('error')
+            }
+		})
+	}
+
+	function Down(Id){
+		var Ipconfig = Ipconfigs().Local
+		var url = Ipconfig.LocalIpHost +':' + Ipconfig.LocalIpPort + '/DownLinkUrl?Id=' + Id
+		$.ajax({
+			type:'GET',
+            url:url,
+            dataType:'json',
+            data:{},
+            beforeSend:function(){},
+            success:function(data){
+            	if (data.error) {
+            		alert(data.result.msg)
+            		ShowFiles()
+            	} else {
+            		ShowFiles()
+            	}
+            },
+            error:function(){
+                console.log('error')
+            }
+		})
+	}
+
+
+	// function ajax(){ 
+	//   var ajaxData = { 
+	//     type:arguments[0].type || "GET", 
+	//     url:arguments[0].url || "", 
+	//     async:arguments[0].async || "true", 
+	//     data:arguments[0].data || null, 
+	//     dataType:arguments[0].dataType || "text", 
+	//     contentType:arguments[0].contentType || "application/x-www-form-urlencoded", 
+	//     beforeSend:arguments[0].beforeSend || function(){}, 
+	//     success:arguments[0].success || function(){}, 
+	//     error:arguments[0].error || function(){} 
+	//   } 
+	//   ajaxData.beforeSend() 
+	//   var xhr = createxmlHttpRequest();  
+	//   xhr.responseType=ajaxData.dataType; 
+	//   xhr.open(ajaxData.type,ajaxData.url,ajaxData.async);  
+	//   xhr.setRequestHeader("Content-Type",ajaxData.contentType);  
+	//   xhr.send(convertData(ajaxData.data));  
+	//   xhr.onreadystatechange = function() {  
+	//     if (xhr.readyState == 4) {  
+	//       if(xhr.status == 200){ 
+	//         ajaxData.success(xhr.response) 
+	//       }else{ 
+	//         ajaxData.error() 
+	//       }  
+	//     } 
+	//   }  
+	// } 
+	  
+	// function createxmlHttpRequest() {  
+	//   if (window.ActiveXObject) {  
+	//     return new ActiveXObject("Microsoft.XMLHTTP");  
+	//   } else if (window.XMLHttpRequest) {  
+	//     return new XMLHttpRequest();  
+	//   }  
+	// } 
+	  
+	// function convertData(data){ 
+	//   if( typeof data === 'object' ){ 
+	//     var convertResult = "" ;  
+	//     for(var c in data){  
+	//       convertResult+= c + "=" + data[c] + "&";  
+	//     }  
+	//     convertResult=convertResult.substring(0,convertResult.length-1) 
+	//     return convertResult; 
+	//   }else{ 
+	//     return data; 
+	//   } 
+	// }
 </script>
 </html>
