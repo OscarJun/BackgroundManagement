@@ -11,14 +11,31 @@ var Ipconfig = require('../Ipconfig/Ipconfig.js')
 
 // 获取链接内容
 router.get('/LinkUrlList',function(req,res){
+	routeSql.AbpLink.findAll({where:{FileLinkId:req.query.Id,IsDeleted:false,ShowSort:{$ne:0}},order:[['ShowSort','ASC']],attributes:['Id','LinkUrl','Desc','ShowSort','FileLinkId']}).then(function(LinkData){
+		routeSql.AbpLink.findOne({where:{FileLinkId:req.query.Id,ShowSort:0,IsDeleted:false}}).then(function(BackLinkData){
+			res.send({error:0,result:{LinkData:LinkData,BackLinkData:BackLinkData}});
+		});
+	})
+})
+
+// 通过链接文件名称获取链接内容
+router.get('/FileLinkUrlList',function(req,res){
 	console.log(req.query)
-	routeSql.AbpLink.findAll({where:{FileLinkId:req.query.Id,IsDeleted:false},order:[['ShowSort','ASC']],attributes:['Id','LinkUrl','Desc','ShowSort','FileLinkId']}).then(function(LinkData){
-				res.send({error:0,result:LinkData});
-			});
+	routeSql.FileLinkName.findOne({where:{LinkName:req.query.LinkName,IsDeleted:false}}).then(function(data){
+		console.log(data)
+		if (data) {
+			routeSql.AbpLink.findAll({where:{FileLinkId:data.dataValues.Id,IsDeleted:false,ShowSort:{$ne:0}},order:[['ShowSort','ASC']],attributes:['Id','LinkUrl','Desc','ShowSort','FileLinkId']}).then(function(LinkData){
+				routeSql.AbpLink.findOne({where:{FileLinkId:data.dataValues.Id,ShowSort:0,IsDeleted:false}}).then(function(BackLinkData){
+					res.send({error:0,result:{LinkData:LinkData,BackLinkData:BackLinkData}});
+				});
+			})
+		} else {
+			res.send({error:1,result:{msg:'文件链接不存在'}})
+		}
+	})
 })
 
 router.post('/CreateNewUrl',function(req,res){
-	// console.log(req.body);
 	routeSql.AbpLink.max('ShowSort',{where:{FileLinkId:req.body.FileLinkId}}).then(function(MaxShowSort){
 		var NewShowSort = MaxShowSort?(MaxShowSort+1):1
 		if (req.body.LinkUrl == ''||req.body.Desc == '') {
@@ -40,6 +57,22 @@ router.get('/DeleteLinkUrl',function(req,res){
 		} else {
 			res.send({error:1,result:{msg:'链接不存在'}})
 		}
+	})
+})
+
+router.get('/GetLinkUrl',function(req,res){
+	routeSql.AbpLink.findOne({where:{Id:req.query.Id,IsDeleted:false}}).then(function(LinkData){
+		if (LinkData) {
+			res.send({error:0,result:LinkData.dataValues})
+		} else {
+			res.send({error:1,result:{msg:'该链接不存在'}})
+		}
+	})
+})
+
+router.post('/UpdateLinkUrl',function(req,res){
+	routeSql.AbpLink.update({LinkUrl:req.body.LinkUrl,Desc:req.body.Desc},{where:{Id:req.body.Id}}).then(function(){
+		res.send({error:0,result:{msg:'修改成功'}});
 	})
 })
 

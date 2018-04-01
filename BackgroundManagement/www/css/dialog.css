@@ -1,0 +1,33 @@
+.mask{background:#666666; opacity:0.4;}
+.dialog_body{width:70%; height:100%;margin-left:15%;  background-color:#ffffff;}
+.dialog_top{background-color:lightblue; color:white; height:24px; padding:5px; font-size:12px;}
+.dialog_main{text-align:center; padding-top:10px; color:#333333;}
+.dialog_main input{
+	border: 1px solid #333;
+	margin: 20px 0;
+	width: 300px;
+}
+.dialog_bottom{
+	padding:0 15px;
+	color:#333333;
+}
+.dialog_bottom span{float:right;}
+.dialog_bottom>span>div{
+	background: rgb(244,67,54);
+	border:none;
+	outline: none;
+	height: 30px;
+	width: 50px;
+	line-height: 30px;
+	color: white;
+	opacity: 1;
+	border-radius: none;
+	text-align: center;
+	bottom: 10px;
+	position: absolute;
+	right: 20%;
+}
+.dialog_bottom>span>input[type=button]{
+	margin-right: 20px;
+}
+

@@ -1,0 +1,139 @@
+	html, body, div, span, object, iframe,h1, h2, 
+	h3, h4, h5, h6, p, blockquote, pre,abbr, address, cite, code,del, dfn, 
+	em, img, ins,kbd, q, samp,small, strong, sub, sup, var,b, i,dl, dt, dd, 
+	ol, ul, li,fieldset, form, label, legend,table, caption, tbody, 
+	tfoot,thead,tr, th, td,article, aside, canvas, details, figcaption, 
+	figure, footer, header, hgroup, menu, nav, section, summary,time, mark, 
+	audio, video, input, button {
+	    margin:0;
+	    padding:0;
+	    border:0;
+	    outline:0;
+	    font-size:100%;
+	    vertical-align:baseline;
+	    background:transparent;
+	    outline-style:none;/*FF*/ 
+	}
+
+	html, body{
+		background-color: rgb(246,248,249);
+		width: 100%;
+		height: 100%;
+	}
+	body {
+	    line-height:1;
+	}
+	a{
+	    margin:0;
+	    padding:0;
+	    border:0;
+	    font-size:100%;
+	    vertical-align:baseline;
+	    background:transparent;
+	    color: black;
+	    text-decoration: none;
+	}
+	
+	table {
+	    border-collapse:collapse;
+	    border-spacing:0;
+	}
+	 
+	input, select {
+	    vertical-align:middle;
+	}
+	table{
+		/*border-left: 1px solid rgb(231,231,235);*/
+		/*border-right: 1px solid rgb(231,231,235);*/
+		border-top: 1px solid rgb(231,231,235);
+		box-sizing: border-box;
+		overflow: hidden;
+		line-height: 40px;
+	}
+	th,td{
+		/*border-right: 1px solid rgb(231,231,235);*/
+		border-bottom: 1px solid rgb(231,231,235);
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+	div,a{
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+	.main_content{
+		padding-left: 230px;
+	}
+	.content{
+		/*margin: 0 auto;*/
+		width: 100%;
+	    max-width: 1600px;
+	    margin-left: auto;
+	    margin-right: auto;
+		background-color: #fff;
+		height: 100%;
+		padding: 10px;
+		min-width: 1000px;
+		float: right;
+	}
+	.sidemenu{
+		width: 230px;
+		height: 100%;
+		float: left;
+		background: rgb(246,248,249);
+		position:fixed;
+	}
+	.sidemenu ul{
+		margin-top: 50px;
+		color: black;
+	}
+	.sidemenu li{
+		line-height: 36px;
+		padding-left: 80px;
+		cursor:pointer;
+		border-top: 1px solid rgb(228,232,235)
+	}
+	.sidemenu li:hover{
+		background: rgb(238,240,241);
+	}
+	.AddTable,.ShowTable{
+		width: 800px;
+		margin: 0 auto;
+		/*box-sizing: border-box;*/
+	}
+	.AddTable{
+		margin-top: 50px;
+	}
+	.ShowTable{
+		margin-top: 60px;
+	}
+	.AddTable>table,.ShowTable>table{
+		width: 800px;
+		text-align: center;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+	.AddTable th:nth-of-type(1),.ShowTable th:nth-of-type(1),.AddTable td:nth-of-type(1),.ShowTable td:nth-of-type(1) div{
+		width: 160px;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+	.AddTable th:nth-of-type(2),.ShowTable th:nth-of-type(2),.AddTable td:nth-of-type(2),.ShowTable td:nth-of-type(2) div{
+		width: 440px;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+	.AddTable th:nth-of-type(3),.ShowTable th:nth-of-type(3),.AddTable td:nth-of-type(3),.ShowTable td:nth-of-type(3) div{
+		width: 200px;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+	.AddTable input{
+		width: calc(100% - 10px);
+		padding-left: 10px;
+	}
+	.ShowTable td button{
+		margin-left: 20px;
+	}
+	.AddTable button,.ShowTable button{
+		cursor: pointer;
+	}
