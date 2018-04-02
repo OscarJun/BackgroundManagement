@@ -51,18 +51,18 @@
 <script>
 	function Ipconfigs(){
 		return Ipconfig = {
-			// Local:{
-			// 	LocalIpHost:'http://47.98.135.197',//外网ip
-			// 	// LocalIpHost:'http://192.168.199.210',//本地测试ip
-			// 	DomainName:'menu.xiaoniu.link',//域名
-			// 	LocalIpPort:8800//运行端口
-			// }
 			Local:{
-				// LocalIpHost:'47.98.135.197',//外网ip
-				LocalIpHost:'http://192.168.199.211',//本地测试ip
-				// DomainName:'menu.xiaoniu.link',//域名
+				LocalIpHost:'http://47.98.135.197',//外网ip
+				// LocalIpHost:'http://192.168.199.210',//本地测试ip
+				DomainName:'menu.xiaoniu.link',//域名
 				LocalIpPort:8800//运行端口
 			}
+			// Local:{
+			// 	// LocalIpHost:'47.98.135.197',//外网ip
+			// 	LocalIpHost:'http://192.168.0.107',//本地测试ip
+			// 	// DomainName:'menu.xiaoniu.link',//域名
+			// 	LocalIpPort:8800//运行端口
+			// }
 		}
 		
 	}
@@ -82,15 +82,15 @@
             	} else {
 	                var UrlArr = [];
 	                data.result.map(function(v){
-	                	UrlArr.push({LinkName:v.LinkName,LinkUrl:v.LinkUrl,Id:v.Id})
+	                	UrlArr.push({Desc:v.Desc,LinkUrl:v.LinkUrl,Id:v.Id})
 	                })
 	                var ShowTbody = document.getElementById('ShowTbody')
 	                ShowTbody.innerHTML = ''
 	                for (var i = 0; i < UrlArr.length; i++) {
 	                	var tr = document.createElement("tr")
 	                	var StrHtml = "<td><div>"
-	                	StrHtml += UrlArr[i].LinkName + "</div></td><td><div><a href='http://" + UrlArr[i].LinkUrl + "'>"
-	                	StrHtml += UrlArr[i].LinkUrl + "</a></div></td><td><div>"
+	                	StrHtml += UrlArr[i].Desc + "</div></td><td><div><a href='http://" + UrlArr[i].LinkUrl + "'>"
+	                	StrHtml += 'http://' + UrlArr[i].LinkUrl + "</a></div></td><td><div>"
 	                	StrHtml += "<button class='Edit' onclick='Edit(" + UrlArr[i].Id + ")' >编辑</button><button class='Delete' onclick='Delete(" + UrlArr[i].Id + ")' >删除</button></div></td>"
 	                	tr.innerHTML = StrHtml;
 	                	ShowTbody.appendChild(tr)

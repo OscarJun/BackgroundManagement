@@ -14,9 +14,9 @@ Ipconfig = {
 		SqlIpPort:3306,
 	},
 	Local:{
-		// LocalIpHost:'47.98.135.197',//外网ip
-		LocalIpHost:'192.168.199.211',//本地测试ip
-		// DomainName:'menu.xiaoniu.link',//域名
+		LocalIpHost:'47.98.135.197',//外网ip
+		// LocalIpHost:'192.168.199.211',//本地测试ip
+		DomainName:'menu.xiaoniu.link',//域名
 		LocalIpPort:8800//运行端口
 	}
 }
